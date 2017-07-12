@@ -35,7 +35,7 @@ def load(fh, position, end):
     fh.seek(position)
     header_size = 8
     size = struct.unpack(">I", fh.read(4))[0]
-    name = str(fh.read(4).decode("utf-8"))
+    name = fh.read(4)
     if(size+position>end):
         print("Buffer overrun!")
     is_box = name not in constants.CONTAINERS_LIST
@@ -203,7 +203,7 @@ class Container(box.Box):
             out_fh.write(struct.pack(">Q", self.size()))
         elif self.header_size == 8:
             out_fh.write(struct.pack(">I", self.size()))
-            out_fh.write(str.encode(self.name))
+            out_fh.write(self.name)
 
         if self.padding > 0:
             in_fh.seek(self.content_start())
